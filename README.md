@@ -36,7 +36,9 @@ npm install
 npm run dev
 ```
 
-Para gerar a versão de produção do site, rode `npm run build` dentro de `frontend/` (sai em `frontend/dist/`). Suba o conteúdo de `dist/` na raiz do domínio: o `.htaccess` incluído faz qualquer endereço (`/produtos`, `/perfil`...) abrir o `index.html` (servidores Apache/Hostinger). Se o site ficar numa subpasta, ajuste `base` no `vite.config.js` e o `RewriteBase` do `public/.htaccess`. Para usar outro backend no site, crie `frontend/.env` com `VITE_API_URL=https://seu-dominio.com`.
+O site é publicado na Vercel (pasta raiz `frontend/`, configuração em `frontend/vercel.json`): cada `git push` na `main` gera uma nova versão automaticamente. As variáveis `VITE_*` ficam em Settings → Environment Variables do projeto na Vercel.
+
+Para gerar a versão de produção do site manualmente, rode `npm run build` dentro de `frontend/` (sai em `frontend/dist/`). Suba o conteúdo de `dist/` na raiz do domínio: o `.htaccess` incluído faz qualquer endereço (`/produtos`, `/perfil`...) abrir o `index.html` (servidores Apache/Hostinger). Se o site ficar numa subpasta, ajuste `base` no `vite.config.js` e o `RewriteBase` do `public/.htaccess`. Para usar outro backend no site, crie `frontend/.env` com `VITE_API_URL=https://seu-dominio.com`.
 
 Mapa do rastreador da coleira (Google Maps): coloque a chave em `frontend/.env` com `VITE_GOOGLE_MAPS_KEY=sua-chave` (o arquivo não vai para o Git) e reinicie o `npm run dev`. Sem a chave, a tela mostra um aviso no lugar do mapa. Os passeios de demonstração ficam em `src/components/dispositivos/trajetosColeira.js` (ruas reais de Osasco, calculadas uma vez com a Routes API).
 

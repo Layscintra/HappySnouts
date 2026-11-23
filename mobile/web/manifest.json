@@ -1,0 +1,35 @@
+{
+    "name": "Happy Snouts",
+    "short_name": "Happy Snouts",
+    "start_url": ".",
+    "display": "standalone",
+    "background_color": "#0B2B68",
+    "theme_color": "#0B2B68",
+    "description": "Happy Snouts — cuidado completo para o seu pet: loja, saúde, alimentação e rastreamento.",
+    "orientation": "portrait-primary",
+    "prefer_related_applications": false,
+    "icons": [
+        {
+            "src": "icons/Icon-192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "icons/Icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        },
+        {
+            "src": "icons/Icon-maskable-192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "maskable"
+        },
+        {
+            "src": "icons/Icon-maskable-512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "maskable"
+        }
+    ]
+}

@@ -1,0 +1,23 @@
+# dependências
+node_modules/
+
+# builds
+frontend/dist/
+mobile/build/
+mobile/android/build/
+
+# variáveis de ambiente (nunca vão para o Git; use os .env.example)
+.env
+.env.*
+!.env.example
+
+# imagens enviadas pelos usuários
+backend/uploads/*
+!backend/uploads/.gitkeep
+
+# editor e sistema
+.claude/
+.idea/
+.DS_Store
+Thumbs.db
+*.log

@@ -1,0 +1,49 @@
+/* Carregar antes do CSS de cada página. Para mudar o laranja do site todo, mude --hs-laranja. */
+
+:root {
+  /* laranja da marca */
+  --hs-laranja: #ff7a00;
+  --hs-laranja-claro: #ff9a2e;
+  --hs-laranja-escuro: #e86a00;
+  --hs-ambar: #ffb238;
+  --hs-manteiga: #ffe9c7;
+  --hs-pessego: #ffefd8;
+
+  /* fundos */
+  --hs-creme: #fff8ee;
+  --hs-creme-forte: #fff3e2;
+  --hs-papel: #fffdf9;
+
+  /* texto */
+  --hs-tinta: #3b2412; /* títulos e texto principal (marrom) */
+  --hs-texto-suave: #8a7565;
+  --hs-linha: #ffe6c4;
+
+  /* verde-petróleo (rodapé, botões secundários) */
+  --hs-verde: #387a71;
+  --hs-verde-escuro: #2f6a62;
+  --hs-verde-ok: #2fa84f;
+
+  /* azul-marinho (cor secundária: filtros da loja) */
+  --hs-marinho: #1b3a63;
+  --hs-marinho-medio: #2c5282;
+  --hs-marinho-borda: #c9d6e6;
+  --hs-marinho-fundo: #eef3f9;
+
+  /* avisos */
+  --hs-vermelho: #f04438;
+
+  /* fontes */
+  --hs-fonte-titulo: "Baloo 2", system-ui, sans-serif;
+  --hs-fonte-texto: "Nunito", system-ui, sans-serif;
+
+  /* layout: largura do conteúdo e margem lateral de TODAS as páginas
+     (usadas pelo .hs-container e pelo cabeçalho, no base.css) */
+  --hs-largura: 1200px;
+  --hs-margem: 24px;
+}
+@media (max-width: 640px) {
+  :root {
+    --hs-margem: 14px;
+  }
+}

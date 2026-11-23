@@ -1,0 +1,959 @@
+/* Carregar depois do CSS de cada página. */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+html {
+  -webkit-text-size-adjust: 100%;
+}
+video {
+  max-width: 100%;
+}
+body {
+  overflow-x: clip;
+  overflow-wrap: break-word;
+}
+/* o atributo hidden sempre esconde, mesmo com display definido no CSS da página (ex.: contador do carrinho) */
+[hidden] {
+  display: none !important;
+}
+
+/* CONTAINER ÚNICO
+   Toda página usa o mesmo miolo: no máximo --hs-largura de conteúdo,
+   centralizado, com --hs-margem de cada lado (valores no tokens.css).
+   Só mexe nas laterais: o espaço de cima/baixo continua no CSS da página.
+   O cabeçalho (header.top, mais abaixo) usa a mesma conta, então o logo
+   e o menu ficam alinhados com a borda do conteúdo em qualquer tela. */
+.hs-container {
+  width: 100%;
+  max-width: calc(var(--hs-largura) + 2 * var(--hs-margem));
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: var(--hs-margem);
+  padding-right: var(--hs-margem);
+}
+
+/* Carrossel da home: a trilha precisa poder encolher dentro do flex */
+.carousel__track {
+  min-width: 0;
+  flex: 1 1 0;
+}
+
+/* Grids de 1 coluna: "1fr" sozinho cresce com o conteúdo; minmax(0,1fr) não */
+@media (max-width: 960px) {
+  .cols {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+@media (max-width: 860px) {
+  .cols > * {
+    min-width: 0;
+  }
+}
+
+/* Faixas que rolam de lado precisam ficar dentro da tela */
+.cats,
+.tabs,
+.menu {
+  max-width: 100%;
+}
+.bar {
+  min-width: 0;
+  flex-wrap: wrap;
+}
+.bar .tabs {
+  min-width: 0;
+}
+
+/* Celular: campos com 16px evitam o zoom automático do iPhone */
+@media (max-width: 600px) {
+  input,
+  select,
+  textarea {
+    font-size: 16px;
+  }
+}
+
+.hs-aviso {
+  /* é um <dialog> aberto com showModal(): fica na camada do topo, acima de outros modais.
+     Ocupa a tela toda e centraliza a caixa; o fundo escuro é o ::backdrop */
+  position: fixed;
+  inset: 0;
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  padding: 16px;
+  border: 0;
+  background: transparent;
+  display: grid;
+  place-items: center;
+  overflow: auto;
+}
+.hs-aviso:not([open]) {
+  display: none;
+}
+.hs-aviso::backdrop {
+  background: rgba(43, 35, 28, 0.55);
+  backdrop-filter: blur(3px);
+}
+.hs-aviso__caixa {
+  width: min(100%, 400px);
+  background: #fffdf9;
+  color: #2b231c;
+  border-radius: 20px;
+  padding: 28px 24px 20px;
+  text-align: center;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+  font-family: inherit;
+}
+.hs-aviso__patinha {
+  font-size: 2.2rem;
+  line-height: 1;
+  margin-bottom: 8px;
+}
+.hs-aviso__caixa h2 {
+  margin: 0 0 8px;
+  font-size: 1.4rem;
+}
+.hs-aviso__caixa p {
+  margin: 0 0 20px;
+  color: #6b6058;
+  line-height: 1.45;
+}
+.hs-aviso__botoes {
+  display: grid;
+  gap: 10px;
+}
+.hs-aviso__btn {
+  display: block;
+  padding: 13px 18px;
+  border-radius: 999px;
+  font-weight: 700;
+  text-decoration: none;
+  text-align: center;
+  color: #1c4038;
+  background: var(--hs-manteiga);
+  border: 2px solid var(--hs-laranja);
+}
+.hs-aviso__btn--principal {
+  background: var(--hs-laranja);
+  color: #fff;
+}
+.hs-aviso__btn:hover {
+  filter: brightness(0.96);
+}
+.hs-aviso__fechar {
+  margin-top: 14px;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  color: #6b6058;
+  font: inherit;
+  text-decoration: underline;
+  padding: 6px;
+}
+.hs-aviso__btn:focus-visible,
+.hs-aviso__fechar:focus-visible {
+  outline: 3px solid #2f6f63;
+  outline-offset: 2px;
+}
+
+.hs-confirma {
+  position: fixed;
+  inset: 0;
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  padding: 16px;
+  border: 0;
+  background: transparent;
+  display: grid;
+  place-items: center;
+  overflow: auto;
+}
+.hs-confirma:not([open]) {
+  display: none;
+}
+.hs-confirma::backdrop {
+  background: rgba(43, 35, 28, 0.55);
+  backdrop-filter: blur(3px);
+  animation: hs-confirma-fundo 0.18s ease-out;
+}
+.hs-confirma__caixa {
+  width: min(100%, 420px);
+  padding: 30px 26px 24px;
+  border-top: 5px solid var(--hs-laranja);
+  font-family: var(--hs-fonte-texto);
+  color: var(--hs-tinta);
+  animation: hs-confirma-entra 0.22s cubic-bezier(0.2, 0.9, 0.3, 1.2);
+}
+.hs-confirma--perigo {
+  border-top-color: var(--hs-vermelho);
+}
+.hs-confirma--sair {
+  border-top-color: var(--hs-verde);
+}
+.hs-confirma--aviso {
+  border-top-color: var(--hs-ambar);
+}
+
+.hs-confirma__icone {
+  width: 60px;
+  height: 60px;
+  margin: 0 auto 14px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: var(--hs-laranja-escuro);
+  background: var(--hs-pessego);
+  box-shadow: 0 0 0 7px var(--hs-creme);
+}
+.hs-confirma--perigo .hs-confirma__icone {
+  color: #c8322a;
+  background: #fde8e6;
+  box-shadow: 0 0 0 7px #fff4f3;
+}
+.hs-confirma--sair .hs-confirma__icone {
+  color: var(--hs-verde-escuro);
+  background: #e2efec;
+  box-shadow: 0 0 0 7px #f2f8f6;
+}
+.hs-confirma--aviso .hs-confirma__icone {
+  color: #b26b00;
+  background: #fff0d1;
+  box-shadow: 0 0 0 7px #fff8ea;
+}
+
+.hs-confirma__caixa h2 {
+  margin: 0 0 8px;
+  font: 800 1.45rem/1.2 var(--hs-fonte-titulo);
+  color: var(--hs-tinta);
+}
+.hs-confirma__texto {
+  margin: 0 0 22px !important;
+  color: var(--hs-texto-suave) !important;
+  font-size: 0.98rem;
+  line-height: 1.55;
+  white-space: pre-line;
+}
+.hs-confirma__botoes {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.hs-confirma__btn {
+  min-height: 46px;
+  padding: 11px 16px;
+  border-radius: 999px;
+  font: 800 0.98rem var(--hs-fonte-texto);
+  cursor: pointer;
+  color: var(--hs-tinta);
+  background: #fff;
+  border: 2px solid var(--hs-linha);
+  transition:
+    background 0.15s,
+    border-color 0.15s,
+    transform 0.15s,
+    box-shadow 0.15s;
+}
+.hs-confirma__btn:hover {
+  background: var(--hs-creme);
+  border-color: var(--hs-manteiga);
+}
+.hs-confirma__btn--principal {
+  color: #fff;
+  border-color: transparent;
+  background: linear-gradient(180deg, var(--hs-laranja-claro), var(--hs-laranja-escuro));
+  box-shadow: 0 8px 18px -8px rgba(232, 106, 0, 0.7);
+}
+.hs-confirma__btn--principal:hover {
+  background: linear-gradient(180deg, var(--hs-laranja), var(--hs-laranja-escuro));
+  border-color: transparent;
+  transform: translateY(-1px);
+}
+.hs-confirma__btn--perigo {
+  background: linear-gradient(180deg, #f2574d, #c8322a);
+  box-shadow: 0 8px 18px -8px rgba(200, 50, 42, 0.7);
+}
+.hs-confirma__btn--perigo:hover {
+  background: linear-gradient(180deg, #ef4a40, #b72b24);
+}
+.hs-confirma__btn:active {
+  transform: translateY(1px);
+}
+.hs-confirma__btn:focus-visible {
+  outline: 3px solid var(--hs-marinho-medio);
+  outline-offset: 2px;
+}
+
+@keyframes hs-confirma-fundo {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes hs-confirma-entra {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.96);
+  }
+}
+@media (max-width: 420px) {
+  .hs-confirma__botoes {
+    grid-template-columns: 1fr;
+  }
+  .hs-confirma__btn--principal {
+    order: -1;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hs-confirma,
+  .hs-confirma__caixa {
+    animation: none;
+  }
+}
+
+/* RODAPÉ ÚNICO: igual em TODAS as páginas da loja (só este CSS define o rodapé,
+   inclusive a distância até o conteúdo; as páginas não têm regras próprias dele). */
+.site-footer {
+  position: relative;
+  padding-top: 50px;
+  overflow: visible;
+  margin-top: 150px; /* os pets sobem ~126px acima do rodapé: assim nunca encostam no conteúdo */
+  background: #387a71;
+  color: #eef4f2;
+  font-family: Nunito, sans-serif;
+  line-height: 1.4;
+}
+.site-footer .footer-wave {
+  position: absolute;
+  top: -58px;
+  left: 0;
+  display: block;
+  width: 100%;
+  height: 60px;
+  pointer-events: none;
+}
+.site-footer .footer-inner {
+  position: relative;
+  z-index: auto;
+  display: grid;
+  gap: 20px;
+  grid-template-columns: 1.5fr 1fr 1fr 1.3fr 1fr;
+  width: 100%;
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: 10px 24px 30px;
+  color: #eef4f2;
+}
+.footer-inner > * {
+  min-width: 0;
+}
+@media (max-width: 860px) {
+  .site-footer .footer-inner {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 520px) {
+  .site-footer .footer-inner {
+    grid-template-columns: minmax(0, 1fr);
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
+.site-footer .footer-logo {
+  display: block;
+  width: auto;
+  height: 84px;
+  max-width: 100%;
+  margin: 0;
+  object-fit: contain;
+  object-position: left center;
+}
+.site-footer .socials {
+  display: flex;
+  gap: 10px;
+}
+.site-footer .footer-col h3,
+.site-footer .footer-app h3 {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #fff;
+  font-family: Nunito, sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+}
+.site-footer .footer-col a,
+.site-footer .footer-contact > span {
+  display: block;
+  width: auto;
+  margin-bottom: 10px;
+  color: #e1efeb;
+  font-size: 12.5px;
+  line-height: 1.5;
+  text-decoration: none;
+}
+.site-footer .footer-col a:hover {
+  color: #fff;
+}
+.site-footer .footer-contact a {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.site-footer .footer-pet {
+  position: absolute;
+  right: 0;
+  top: -176px;
+  width: 5cm;
+  max-width: none;
+  height: auto;
+  object-fit: contain;
+  pointer-events: none;
+}
+.site-footer .footer-copy {
+  margin: 0;
+  padding: 14px 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  color: #e1efeb;
+  font-size: 11px;
+  line-height: 1.4;
+  text-align: center;
+}
+@media (max-width: 900px) {
+  .site-footer .footer-pet {
+    display: none;
+  }
+  .site-footer {
+    margin-top: 90px;
+  } /* sem os pets no celular, só o espaço da onda */
+}
+.site-footer .footer-brand p {
+  margin: 14px 0 16px;
+  max-width: 240px;
+  color: #e1efeb;
+  font-size: 13.5px;
+  line-height: 1.5;
+}
+.site-footer .socials a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border: 0;
+  border-radius: 50%;
+  background: #fff;
+  color: #387a71;
+}
+.site-footer .socials a:hover {
+  background: #fff8ee;
+}
+/* .badge também é a etiqueta de desconto dos produtos: aqui volta a ficar na coluna */
+.site-footer .app-badges {
+  display: flex;
+  gap: 10px;
+}
+.site-footer .app-badges .badge {
+  position: static;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+}
+.site-footer .footer-col h3,
+.site-footer .footer-app h3 {
+  min-height: 22px;
+  margin: 0 0 14px;
+  line-height: 22px;
+}
+/* emojis viram silhueta clara: os coloridos somem no fundo verde */
+.site-footer .paw {
+  width: auto;
+  height: auto;
+  margin: 0;
+  font-size: 14px;
+  line-height: 1;
+  filter: brightness(0) invert(1);
+}
+.site-footer .footer-contact > span {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.site-footer .footer-contact svg {
+  flex: none;
+  width: 14px;
+  height: 14px;
+}
+@media (max-width: 520px) {
+  .site-footer .footer-logo {
+    height: 72px;
+  }
+}
+
+.site-footer .footer-col h3,
+.site-footer .footer-app h3 {
+  gap: 8px;
+  min-height: 24px;
+  margin: 0 0 16px;
+  font-family: var(--hs-fonte-titulo);
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 24px;
+  letter-spacing: 0.1px;
+}
+.site-footer .paw {
+  font-size: 15px;
+}
+.site-footer .footer-col a,
+.site-footer .footer-contact > span {
+  margin-bottom: 12px;
+  color: rgba(255, 255, 255, 0.86);
+  font-size: 14px;
+  line-height: 1.4;
+  transition: color 0.15s;
+}
+.site-footer .footer-col a:hover {
+  color: #fff;
+}
+.site-footer .footer-col:not(.footer-contact) a::after {
+  content: "›";
+  display: inline-block;
+  margin-left: 7px;
+  color: var(--hs-ambar);
+  font-size: 17px;
+  font-weight: 800;
+  line-height: 1;
+  transition: transform 0.15s;
+}
+.site-footer .footer-col:not(.footer-contact) a:hover::after {
+  transform: translateX(3px);
+}
+.site-footer .footer-contact a,
+.site-footer .footer-contact > span {
+  gap: 10px;
+}
+.site-footer .footer-contact svg {
+  width: 16px;
+  height: 16px;
+  color: #fff;
+}
+.site-footer .footer-brand p {
+  max-width: 250px;
+  color: rgba(255, 255, 255, 0.88);
+  font-size: 14.5px;
+  line-height: 1.55;
+}
+.site-footer .footer-copy {
+  padding: 16px;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 13px;
+  letter-spacing: 0.2px;
+}
+.site-footer .footer-app {
+  text-align: center;
+}
+.site-footer .footer-app h3 {
+  justify-content: center;
+}
+.site-footer .app-badges {
+  justify-content: center;
+}
+.site-footer .app-badges .badge {
+  width: 66px;
+  height: 38px;
+  border: 1.5px solid rgba(255, 255, 255, 0.9);
+  border-radius: 999px;
+  background: transparent;
+  transition:
+    background-color 0.15s,
+    transform 0.15s;
+}
+.site-footer .app-badges .badge svg {
+  width: 19px;
+  height: 19px;
+}
+.site-footer .app-badges .badge:hover {
+  background: rgba(255, 255, 255, 0.12);
+  transform: translateY(-1px);
+}
+/* notebook pequeno (5 colunas mais estreitas): texto um pouco menor para nada quebrar linha */
+@media (min-width: 861px) and (max-width: 1180px) {
+  .site-footer .footer-col h3,
+  .site-footer .footer-app h3 {
+    font-size: 15.5px;
+  }
+  .site-footer .footer-col a,
+  .site-footer .footer-contact > span {
+    font-size: 13px;
+  }
+  .site-footer .footer-col:not(.footer-contact) a::after {
+    margin-left: 5px;
+  }
+}
+@media (min-width: 861px) and (max-width: 1060px) {
+  .site-footer .footer-col h3,
+  .site-footer .footer-app h3 {
+    font-size: 14.5px;
+    gap: 6px;
+  }
+  .site-footer .footer-col a,
+  .site-footer .footer-contact > span {
+    font-size: 12.5px;
+  }
+  .site-footer .footer-col:not(.footer-contact) a::after {
+    margin-left: 4px;
+    font-size: 15px;
+  }
+}
+
+/* menu do topo: cabe em telas de 360px */
+@media (max-width: 600px) {
+  .top .nav a {
+    padding-left: 6px;
+    padding-right: 6px;
+  }
+}
+
+.hs-toast {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  z-index: 1100;
+  transform: translate(-50%, 20px);
+  opacity: 0;
+  pointer-events: none;
+  max-width: calc(100% - 32px);
+  padding: 12px 20px;
+  border-radius: 999px;
+  background: #1c4038;
+  color: #fff;
+  font-weight: 600;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  transition:
+    opacity 0.25s,
+    transform 0.25s;
+}
+.hs-toast--on {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+.hs-toast--erro {
+  background: #b3362d;
+}
+@media (prefers-reduced-motion: reduce) {
+  .hs-toast {
+    transition: none;
+  }
+}
+
+.hs-estado {
+  grid-column: 1 / -1;
+  margin: 24px auto;
+  padding: 28px 20px;
+  max-width: 460px;
+  text-align: center;
+  color: #6b6058;
+  line-height: 1.5;
+}
+.hs-estado a,
+.hs-estado button {
+  display: inline-block;
+  margin-top: 12px;
+  padding: 10px 20px;
+  border-radius: 999px;
+  background: var(--hs-laranja);
+  color: #fff;
+  border: 0;
+  font: inherit;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* CABEÇALHO ÚNICO (todas as páginas da loja)
+   - notebook: logo | busca | menu, numa linha só
+   - tablet: logo + menu em cima, busca embaixo
+   - celular: logo + busca no topo; o menu vira barra fixa
+   embaixo da tela (fica sempre à mão do polegar)
+   Seletor "header.top" para valer por cima do CSS de cada página. */
+header.top {
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 20px;
+  /* fundo de ponta a ponta, mas o conteúdo do topo alinhado ao .hs-container */
+  min-height: 0;
+  padding: 10px max(var(--hs-margem), calc((100% - var(--hs-largura)) / 2));
+  background: #fff;
+  box-shadow: 0 2px 14px rgba(255, 122, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+header.top .logo {
+  flex: none;
+  display: block;
+  margin: 0;
+  padding: 0;
+  line-height: 0;
+}
+header.top .logo img {
+  height: 46px;
+  width: auto;
+  max-width: none;
+}
+header.top .search {
+  flex: 1 1 auto;
+  min-width: 0;
+  max-width: 720px;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 46px;
+  padding: 0 5px 0 18px;
+  border-radius: 999px;
+  background: #ffefd8;
+  border: 0;
+}
+header.top .search > .i,
+header.top .search > svg {
+  display: none;
+}
+header.top .search input {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  border: 0;
+  background: none;
+  outline: 0;
+  font: inherit;
+  font-size: 0.95rem;
+  color: #3b2412;
+  padding: 0;
+}
+header.top .search button {
+  flex: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 0;
+  display: grid;
+  place-items: center;
+  background: var(--hs-laranja);
+  color: #fff;
+  cursor: pointer;
+}
+header.top .search button .i,
+header.top .search button svg {
+  display: block;
+  width: 18px;
+  height: 18px;
+}
+header.top .search:focus-within {
+  box-shadow: 0 0 0 3px rgba(255, 122, 0, 0.3);
+}
+
+header.top .nav {
+  flex: none;
+  display: flex;
+  gap: 2px;
+  margin-left: auto;
+}
+header.top .nav a {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  gap: 2px;
+  min-width: 64px;
+  padding: 6px 10px;
+  border-radius: 12px;
+  color: var(--hs-laranja);
+  font-size: 0.8rem;
+  font-weight: 700;
+  line-height: 1.1;
+  text-decoration: none;
+}
+header.top .nav a:hover {
+  background: #fff3e2;
+}
+header.top .nav a.cur {
+  background: #ffe3bd;
+  box-shadow: inset 0 0 0 1px #ffd08f;
+}
+header.top .nav .i,
+header.top .nav svg {
+  width: 26px;
+  height: 26px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+header.top .nav em {
+  position: absolute;
+  top: 0;
+  right: 12px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 4px;
+  border-radius: 9px;
+  background: var(--hs-laranja);
+  color: #fff;
+  border: 2px solid #fff;
+  font:
+    700 0.68rem/14px Nunito,
+    sans-serif;
+  font-style: normal;
+  text-align: center;
+  box-sizing: content-box;
+}
+
+@media (max-width: 960px) {
+  header.top {
+    flex-wrap: wrap;
+    gap: 8px 12px;
+    padding-top: 8px;
+    padding-bottom: 10px;
+  }
+  header.top .logo img {
+    height: 40px;
+  }
+  header.top .search {
+    order: 3;
+    flex-basis: 100%;
+    max-width: none;
+    height: 44px;
+  }
+}
+
+@media (max-width: 640px) {
+  header.top {
+    flex-wrap: nowrap;
+    gap: 10px;
+    padding: 8px var(--hs-margem);
+  }
+  header.top .logo img {
+    height: 34px;
+  }
+  header.top .search {
+    order: 0;
+    flex: 1 1 auto;
+    height: 42px;
+    padding-left: 14px;
+  }
+  header.top .search input {
+    font-size: 16px;
+  } /* evita zoom automático no iPhone */
+
+  header.top .nav {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 900;
+    margin: 0;
+    justify-content: space-around;
+    gap: 0;
+    padding: 6px 4px calc(6px + env(safe-area-inset-bottom));
+    background: #fff;
+    border-top: 1px solid #ffe6c4;
+    box-shadow: 0 -4px 16px rgba(122, 63, 0, 0.1);
+  }
+  header.top .nav a {
+    flex: 1;
+    min-width: 0;
+    padding: 4px 2px;
+    font-size: 11.5px;
+  }
+  header.top .nav a.cur {
+    box-shadow: none;
+  }
+  header.top .nav .i,
+  header.top .nav svg {
+    width: 24px;
+    height: 24px;
+  }
+  header.top .nav em {
+    right: calc(50% - 22px);
+  }
+
+  /* espaço para a barra de baixo não cobrir o rodapé, e avisos acima dela */
+  body:has(header.top .nav) {
+    padding-bottom: calc(66px + env(safe-area-inset-bottom));
+  }
+  .hs-toast,
+  #toast,
+  .toast {
+    bottom: calc(80px + env(safe-area-inset-bottom)) !important;
+  }
+}
+
+/* Títulos em azul-marinho no site todo
+   (o base.css é o último CSS de cada página, então vale por cima
+   das cores antigas: marrom, verde e laranja). Ícones ao lado
+   dos títulos continuam laranja. Para mudar o tom: --hs-marinho
+   no tokens.css. */
+h1, h2, h3, h4,
+.page-title,
+.summary-card h2, .frete-card h2,
+.co-card h2, .co-sucesso h2,
+.title,
+.secao,
+.hero__title, .section__title, .blog__title {
+  color: var(--hs-marinho);
+}
+/* ícones dentro dos títulos: azul-marinho também
+   (o coraçãozinho do banner do início e as patinhas dos títulos do início ficam laranja) */
+:is(h1, h2, h3, h4, .page-title, .title, .secao):not(.who h1, .phead h2, .oferta-card *, .site-footer *, footer *)
+  :is(svg, .i):not(.hero__heart, .title-paw) {
+  color: var(--hs-marinho) !important;
+}
+.secao::before {
+  content: "" !important;
+  width: 16px;
+  height: 16px;
+  flex: none;
+  background: var(--hs-marinho);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cpath d='M20 19c5.5 0 10.5 6.4 10.5 11 0 3.2-2.6 4.6-5.3 4.6-2.4 0-3.4-1.2-5.2-1.2s-2.8 1.2-5.2 1.2c-2.7 0-5.3-1.4-5.3-4.6C9.5 25.4 14.5 19 20 19Z'/%3E%3Cellipse cx='8' cy='17' rx='3.6' ry='4.6' transform='rotate(-20 8 17)'/%3E%3Cellipse cx='15' cy='9' rx='3.6' ry='4.8' transform='rotate(-6 15 9)'/%3E%3Cellipse cx='25' cy='9' rx='3.6' ry='4.8' transform='rotate(6 25 9)'/%3E%3Cellipse cx='32' cy='17' rx='3.6' ry='4.6' transform='rotate(20 32 17)'/%3E%3C/svg%3E")
+    center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cpath d='M20 19c5.5 0 10.5 6.4 10.5 11 0 3.2-2.6 4.6-5.3 4.6-2.4 0-3.4-1.2-5.2-1.2s-2.8 1.2-5.2 1.2c-2.7 0-5.3-1.4-5.3-4.6C9.5 25.4 14.5 19 20 19Z'/%3E%3Cellipse cx='8' cy='17' rx='3.6' ry='4.6' transform='rotate(-20 8 17)'/%3E%3Cellipse cx='15' cy='9' rx='3.6' ry='4.8' transform='rotate(-6 15 9)'/%3E%3Cellipse cx='25' cy='9' rx='3.6' ry='4.8' transform='rotate(6 25 9)'/%3E%3Cellipse cx='32' cy='17' rx='3.6' ry='4.6' transform='rotate(20 32 17)'/%3E%3C/svg%3E")
+    center / contain no-repeat;
+}
+
+/* exceções: títulos sobre fundo escuro continuam com a cor do bloco (branco) */
+.oferta-card :is(h1, h2, h3, h4) {
+  color: inherit;
+}
+.who h1 {
+  color: var(--hs-tinta);
+} /* nome no topo do perfil: cor original (marrom-escuro) */
+
+/* Avisos rápidos (toasts) em azul-marinho no site todo:
+   .hs-toast (geral), #toast (blog) e .toast (início).
+   Aviso de erro continua vermelho. */
+.hs-toast,
+#toast,
+.toast {
+  background: var(--hs-marinho);
+  color: #fff;
+}
+.hs-toast.hs-toast--erro {
+  background: #b3362d;
+}

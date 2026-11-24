@@ -39,6 +39,39 @@ flutter test
 
 O formatador usa linhas de até 120 colunas (`analysis_options.yaml`).
 
+## Gerar o APK (Android)
+
+O app é publicado como `com.happysnouts.app`. A versão final usa só HTTPS; HTTP fica
+liberado apenas nos builds de desenvolvimento (`src/debug/AndroidManifest.xml`).
+
+1. Crie a chave de assinatura **uma única vez** e guarde o arquivo e as senhas num
+   lugar seguro (sem ela não dá para publicar atualizações do app):
+
+   ```bash
+   keytool -genkey -v -keystore android/app/upload-keystore.jks -keyalg RSA -keysize 2048 -validity 10000 -alias upload
+   ```
+
+2. Crie `android/key.properties` (não vai para o Git, assim como o `.jks`):
+
+   ```properties
+   storePassword=senha-da-chave
+   keyPassword=senha-da-chave
+   keyAlias=upload
+   storeFile=upload-keystore.jks
+   ```
+
+3. Atualize `version:` no `pubspec.yaml` (ex.: `1.0.1+2`; o número depois do `+` sempre sobe) e gere o APK:
+
+   ```bash
+   flutter build apk --release
+   ```
+
+   O arquivo sai em `build/app/outputs/flutter-apk/app-release.apk`.
+
+Sem o `key.properties`, o build usa a chave de teste do Flutter (serve para testar, não para publicar).
+
+Ícone do app: a imagem fica em `assets/icon/`; depois de trocar, rode `dart run flutter_launcher_icons`.
+
 ## O que vem do backend
 
 | Recurso | Rotas |
@@ -111,6 +144,4 @@ volta ao que está no banco.
 - Cobrança de verdade do Pix/boleto/cartão (hoje, como no site, a forma de
   pagamento só aparece no resumo do pedido).
 - Notificações push.
-- Publicação: trocar `applicationId` (`com.example.happysnouts`), ícone do app,
-  splash nativa, assinatura de release e usar HTTPS (hoje o Android libera HTTP
-  para funcionar com o backend local).
+- Splash nativa com o logo (hoje é a tela branca padrão do Flutter).

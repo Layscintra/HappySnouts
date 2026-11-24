@@ -196,7 +196,7 @@ class _TrackerMapState extends State<TrackerMap> with SingleTickerProviderStateM
           TileLayer(
             urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
             // o OpenStreetMap pede que cada app se identifique
-            userAgentPackageName: 'com.example.happysnouts',
+            userAgentPackageName: 'com.happysnouts.app',
             maxNativeZoom: 19,
           ),
         CircleLayer(circles: widget.circles),

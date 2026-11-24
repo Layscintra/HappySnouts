@@ -1,4 +1,4 @@
-package com.example.happysnouts
+package com.happysnouts.app
 
 import io.flutter.embedding.android.FlutterActivity
 

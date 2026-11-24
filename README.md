@@ -78,7 +78,7 @@ Sem isso tudo funciona, mas os e-mails (inclusive o código de recuperação) ap
 
 1. Em https://console.cloud.google.com crie um projeto e configure a **Tela de consentimento OAuth**.
 2. Em **Credenciais**, crie um ID do cliente OAuth do tipo **Aplicativo da Web** (para o web, adicione `http://localhost` nas origens autorizadas).
-3. Crie também um do tipo **Android**: pacote `com.example.happysnouts` e a impressão SHA-1 da chave de debug (`cd mobile/android && ./gradlew signingReport`).
+3. Crie também um do tipo **Android**: pacote `com.happysnouts.app` e a impressão SHA-1 da chave de debug (`cd mobile/android && ./gradlew signingReport`).
 4. Coloque o ID do **Aplicativo da Web** em `GOOGLE_CLIENT_IDS` no `.env` e no app, em `mobile/lib/config/app_config.dart` (`_googleClientIdPadrao`) ou rodando com `--dart-define=GOOGLE_CLIENT_ID=...`.
 
 ## Testes
